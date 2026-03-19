@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro de Ideas - Mural Col·laboratiu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .post-it {
+            transition: transform 0.2s;
+            cursor: grab;
+        }
+
+        .post-it:active {
+            cursor: grabbing;
+        }
+
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Estils per al mode projector (Pseudo-fullscreen) */
+        .projector-mode #sidebar-creator {
+            display: none !important;
+        }
+        
+        .projector-mode header {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .projector-mode #display-title {
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <div id="app" class="flex-grow flex flex-col">
+        <!-- Pantalla de Benvinguda / Selecció de Rol -->
+        <div id="welcome-screen" class="flex-grow flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
+                <div class="mb-6 flex justify-center">
+                    <div class="p-4 bg-teal-100 rounded-full text-teal-600">
+                        <i data-lucide="layout-dashboard" class="w-12 h-12"></i>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Muro de Ideas</h1>
+                <p class="text-gray-500 mb-8">Crea un mur col·laboratiu o uneix-te a un existent per compartir idees.</p>
+                
+                <div class="space-y-4">
+                    <button onclick="showCreateScreen()" class="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        Crear un nou mur
+                    </button>
+                    <button onclick="showJoinScreen()" class="w-full py-4 bg-white border-2 border-teal-600 text-teal-600 hover:bg-teal-50 font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="user-plus" class="w-5 h-5"></i>
+                        Unir-se a un mur
+                    </button>
+                </div>
+                <p class="mt-8 text-xs text-gray-400">Aplicació inspirada en el projecte de Juan José de Haro</p>
+            </div>
+        </div>
+
+        <!-- Pantalla: Crear Mur -->
+        <div id="create-screen" class="hidden flex-grow flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Configurar la sessió</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Títol o pregunta del mur:</label>
+                        <input type="text" id="wall-title" placeholder="Ex: Què hem après avui?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Color del tema:</label>
+                        <div class="flex gap-2">
+                            <button onclick="setTheme('#0d9488')" class="w-8 h-8 rounded-full bg-teal-600 ring-2 ring-offset-2 ring-teal-600"></button>
+                            <button onclick="setTheme('#2563eb')" class="w-8 h-8 rounded-full bg-blue-600"></button>
+                            <button onclick="setTheme('#db2777')" class="w-8 h-8 rounded-full bg-pink-600"></button>
+                            <button onclick="setTheme('#ea580c')" class="w-8 h-8 rounded-full bg-orange-600"></button>
+                        </div>
+                    </div>
+                    <button id="btn-init-wall" onclick="initWall()" class="w-full py-4 bg-teal-600 text-white font-bold rounded-xl mt-4 disabled:opacity-50">Iniciar Sessió</button>
+                    <button onclick="goHome()" class="w-full text-gray-500 text-sm">Tornar enrere</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla: Unir-se a Mur -->
+        <div id="join-screen" class="hidden flex-grow flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Unir-se a un mur</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Codi del mur (6 dígits):</label>
+                        <input type="text" id="join-code" placeholder="Ex: 9466XV" class="w-full p-4 border-2 rounded-xl text-center text-2xl font-mono tracking-widest focus:border-teal-600 outline-none">
+                    </div>
+                    <button id="btn-validate-join" onclick="validateJoin()" class="w-full py-4 bg-teal-600 text-white font-bold rounded-xl disabled:opacity-50">Unir-se</button>
+                    <button onclick="goHome()" class="w-full text-gray-500 text-sm">Tornar enrere</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla: Mural del Creador -->
+        <div id="creator-view" class="hidden flex-grow flex flex-col h-screen overflow-hidden bg-gray-50">
+            <!-- Header Toolbar -->
+            <header class="bg-white border-b p-4 flex flex-wrap items-center justify-between gap-4 transition-colors duration-300">
+                <div class="flex items-center gap-3">
+                    <h1 id="display-title" class="text-xl font-bold text-gray-800">Muro de Ideas</h1>
+                    <span id="session-badge" class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full font-mono text-sm font-bold"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleWallState()" id="btn-status" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium">Aturar</button>
+                    <button onclick="autoOrganize()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Autoorganitzar</button>
+                    <button onclick="exportCSV()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium">Exporta a CSV</button>
+                    <button onclick="toggleFullScreen()" id="btn-project" class="px-4 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium">Projectar</button>
+                </div>
+            </header>
+
+            <div class="flex flex-grow overflow-hidden">
+                <!-- Sidebar Esquerra: QR i Instruccions -->
+                <aside class="w-80 bg-white border-r p-6 overflow-y-auto hidden md:block" id="sidebar-creator">
+                    <div class="space-y-8">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">1. Escaneja el QR</p>
+                            <div id="qrcode" class="flex justify-center bg-white p-2 border rounded-lg"></div>
+                            <p class="text-center text-[10px] text-gray-400 mt-2">Fes clic per ampliar</p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">2. O comparteix l'enllaç</p>
+                            <div class="p-3 bg-gray-50 rounded-lg text-[10px] break-all font-mono text-gray-600 border" id="share-link"></div>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">3. O ves a l'APP i introdueix:</p>
+                            <div class="p-4 border-2 border-dashed border-cyan-400 rounded-xl text-center">
+                                <span id="display-code" class="text-3xl font-mono font-black text-cyan-600 tracking-tighter"></span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Àrea del Mur -->
+                <main class="flex-grow relative grid-bg overflow-hidden" id="wall-container">
+                    <!-- Les notes apareixeran aquí -->
+                </main>
+            </div>
+        </div>
+
+        <!-- Pantalla: Participant (Enviament de notes) -->
+        <div id="participant-view" class="hidden flex-grow flex flex-col bg-white">
+            <header class="p-4 bg-teal-600 text-white flex justify-between items-center">
+                <h1 class="font-bold">Muro de Ideas</h1>
+                <span id="part-session-code" class="text-xs opacity-80 font-mono"></span>
+            </header>
+            <div class="p-6 space-y-6 max-w-lg mx-auto w-full">
+                <div class="bg-teal-50 p-4 rounded-xl border border-teal-100">
+                    <h2 id="part-title" class="text-lg font-bold text-teal-800">Pregunta del mur</h2>
+                </div>
+                
+                <div id="post-it-form">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">La teva aportació:</label>
+                    <textarea id="note-text" rows="5" class="w-full p-4 border-2 rounded-xl focus:border-teal-600 outline-none text-lg resize-none" placeholder="Escriu la teva idea aquí..."></textarea>
+                    
+                    <div class="mt-4 flex items-center justify-between">
+                        <span id="char-count" class="text-xs text-gray-400">0 / 200</span>
+                        <button onclick="sendNote()" id="btn-send" class="px-8 py-3 bg-teal-600 text-white font-bold rounded-xl shadow-lg disabled:opacity-50">Enviar</button>
+                    </div>
+                </div>
+
+                <div id="sent-confirmation" class="hidden text-center py-12">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-600 rounded-full mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Enviat correctament!</h3>
+                    <p class="text-gray-500 mt-2">Vols enviar una altra nota?</p>
+                    <button onclick="resetNoteForm()" class="mt-6 px-6 py-2 border-2 border-teal-600 text-teal-600 font-bold rounded-lg">Nova nota</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+        // Constants d'entorn
+        const firebaseConfig = JSON.parse(window.__firebase_config || '{}');
+        const appId = window.__app_id || 'muro-ideas-demo';
+        const initialToken = window.__initial_auth_token;
+        
+        // Inicialització Firebase immediata
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        let currentSessionId = "";
+        let isCreator = false;
+        let wallActive = true;
+        let renderedNotes = new Set();
+        let isPseudoFullScreen = false;
+
+        // --- AUTENTICACIÓ ---
+        const initAuth = async () => {
+            try {
+                if (initialToken) {
+                    await signInWithCustomToken(auth, initialToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth error:", error);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            document.querySelectorAll('button').forEach(b => b.disabled = !user);
+        });
+
+        initAuth();
+
+        // --- NAVEGACIÓ ---
+        window.showCreateScreen = () => switchView('create-screen');
+        window.showJoinScreen = () => switchView('join-screen');
+        window.goHome = () => switchView('welcome-screen');
+
+        function switchView(viewId) {
+            document.querySelectorAll('#app > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- LÒGICA DEL CREADOR ---
+        window.initWall = async () => {
+            if (!currentUser) return;
+            const title = document.getElementById('wall-title').value || "Muro de Ideas";
+            currentSessionId = Math.random().toString(36).substring(2, 8).toUpperCase();
+            isCreator = true;
+
+            const sessionRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', currentSessionId);
+            
+            await setDoc(sessionRef, {
+                title: title,
+                createdAt: serverTimestamp(),
+                active: true,
+                creatorId: currentUser.uid
+            });
+
+            setupCreatorView(title, currentSessionId);
+            listenForNotes();
+        };
+
+        function setupCreatorView(title, code) {
+            switchView('creator-view');
+            document.getElementById('display-title').innerText = title;
+            document.getElementById('session-badge').innerText = code;
+            document.getElementById('display-code').innerText = code;
+            
+            const url = window.location.href.split('?')[0] + '?session=' + code;
+            document.getElementById('share-link').innerText = url;
+            
+            const qrdiv = document.getElementById("qrcode");
+            qrdiv.innerHTML = "";
+            new QRCode(qrdiv, {
+                text: url,
+                width: 180,
+                height: 180
+            });
+        }
+
+        function listenForNotes() {
+            const notesCol = collection(db, 'artifacts', appId, 'public', 'data', 'notes');
+            
+            onSnapshot(notesCol, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const data = change.doc.data();
+                        const id = change.doc.id;
+                        if (data.sessionId === currentSessionId && !renderedNotes.has(id)) {
+                            renderedNotes.add(id);
+                            renderNote(data);
+                        }
+                    }
+                });
+            }, (error) => {
+                console.error("Firestore Listen Error:", error);
+            });
+        }
+
+        function renderNote(data) {
+            const wall = document.getElementById('wall-container');
+            const note = document.createElement('div');
+            note.className = "post-it absolute p-4 w-48 bg-yellow-100 shadow-lg border-l-4 border-yellow-400 rounded-sm text-sm text-gray-800 break-words";
+            
+            const x = Math.random() * (wall.clientWidth - 200);
+            const y = Math.random() * (wall.clientHeight - 150);
+            note.style.left = `${Math.max(10, x)}px`;
+            note.style.top = `${Math.max(10, y)}px`;
+            note.style.transform = `rotate(${(Math.random() - 0.5) * 10}deg)`;
+
+            note.innerText = data.text;
+            
+            let isDragging = false;
+            let offset = { x: 0, y: 0 };
+
+            note.onmousedown = (e) => {
+                isDragging = true;
+                note.style.zIndex = 1000;
+                offset.x = e.clientX - note.offsetLeft;
+                offset.y = e.clientY - note.offsetTop;
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                note.style.left = `${e.clientX - offset.x}px`;
+                note.style.top = `${e.clientY - offset.y}px`;
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            wall.appendChild(note);
+        }
+
+        window.toggleWallState = async () => {
+            if (!currentUser) return;
+            wallActive = !wallActive;
+            const btn = document.getElementById('btn-status');
+            btn.innerText = wallActive ? "Aturar" : "Activar";
+            btn.className = wallActive ? "px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium" : "px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium";
+            
+            const sessionRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', currentSessionId);
+            await setDoc(sessionRef, { active: wallActive }, { merge: true });
+        };
+
+        window.autoOrganize = () => {
+            const notes = document.querySelectorAll('.post-it');
+            let x = 20, y = 20;
+            notes.forEach((n) => {
+                n.style.left = `${x}px`;
+                n.style.top = `${y}px`;
+                n.style.transform = 'none';
+                x += 210;
+                if (x > window.innerWidth - 250) {
+                    x = 20;
+                    y += 180;
+                }
+            });
+        };
+
+        window.exportCSV = () => {
+            const notes = document.querySelectorAll('.post-it');
+            let csv = "Data,Contingut\n";
+            const date = new Date().toLocaleDateString();
+            notes.forEach(n => {
+                csv += `"${date}","${n.innerText.replace(/"/g, '""')}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", `mural_${currentSessionId}.csv`);
+            link.click();
+        };
+
+        // --- FUNCIÓ PROJECTAR / FULLSCREEN (Corregit per a entorns restringits) ---
+        window.toggleFullScreen = () => {
+            isPseudoFullScreen = !isPseudoFullScreen;
+            const appEl = document.getElementById('creator-view');
+            const btn = document.getElementById('btn-project');
+            
+            if (isPseudoFullScreen) {
+                appEl.classList.add('projector-mode');
+                btn.innerText = "Sortir";
+                btn.classList.replace('bg-cyan-500', 'bg-gray-800');
+            } else {
+                appEl.classList.remove('projector-mode');
+                btn.innerText = "Projectar";
+                btn.classList.replace('bg-gray-800', 'bg-cyan-500');
+            }
+            
+            // Re-organitzar notes perquè s'ajustin al nou ample
+            setTimeout(window.autoOrganize, 100);
+        };
+
+        window.setTheme = (color) => {
+            console.log("Tema canviat a:", color);
+        };
+
+        // --- LÒGICA DEL PARTICIPANT ---
+        window.validateJoin = async () => {
+            if (!currentUser) return;
+            const code = document.getElementById('join-code').value.toUpperCase();
+            if (code.length < 4) return;
+
+            const sessionRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', code);
+            const snap = await getDoc(sessionRef);
+
+            if (snap.exists()) {
+                currentSessionId = code;
+                const data = snap.data();
+                if (!data.active) return alert("Sessió aturada.");
+                setupParticipantView(data.title, code);
+            } else {
+                alert("Sessió no trobada.");
+            }
+        };
+
+        function setupParticipantView(title, code) {
+            switchView('participant-view');
+            document.getElementById('part-title').innerText = title;
+            document.getElementById('part-session-code').innerText = "Codi: " + code;
+            
+            const textarea = document.getElementById('note-text');
+            textarea.oninput = () => {
+                const len = textarea.value.length;
+                document.getElementById('char-count').innerText = `${len} / 200`;
+                document.getElementById('btn-send').disabled = len === 0 || len > 200;
+            };
+        }
+
+        window.sendNote = async () => {
+            if (!currentUser) return;
+            const text = document.getElementById('note-text').value;
+            if (!text) return;
+
+            const btn = document.getElementById('btn-send');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-dots">Enviant</span>';
+
+            try {
+                const notesCol = collection(db, 'artifacts', appId, 'public', 'data', 'notes');
+                await addDoc(notesCol, {
+                    sessionId: currentSessionId,
+                    text: text,
+                    timestamp: serverTimestamp(),
+                    userId: currentUser.uid
+                });
+
+                document.getElementById('post-it-form').classList.add('hidden');
+                document.getElementById('sent-confirmation').classList.remove('hidden');
+                lucide.createIcons();
+            } catch (e) {
+                console.error("Error enviant nota:", e);
+                btn.disabled = false;
+                btn.innerHTML = "Error";
+            }
+        };
+
+        window.resetNoteForm = () => {
+            document.getElementById('note-text').value = "";
+            document.getElementById('char-count').innerText = "0 / 200";
+            document.getElementById('btn-send').innerHTML = "Enviar";
+            document.getElementById('btn-send').disabled = true;
+            document.getElementById('post-it-form').classList.remove('hidden');
+            document.getElementById('sent-confirmation').classList.add('hidden');
+        };
+
+        window.onload = () => {
+            lucide.createIcons();
+            const params = new URLSearchParams(window.location.search);
+            const session = params.get('session');
+            if (session) {
+                document.getElementById('join-code').value = session;
+                setTimeout(() => {
+                    if (currentUser) window.validateJoin();
+                }, 1000);
+            }
+        };
+    </script>
+</body>
+</html>
