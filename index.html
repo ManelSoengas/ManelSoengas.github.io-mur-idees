@@ -3,40 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mur temporal col·laboratiu</title>
+  <title>Mur d'idees efímer</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --bg: #eef4f7;
       --panel: #ffffff;
-      --soft: #dff2f6;
       --line: #d5dde6;
       --text: #1f2b3d;
       --muted: #637189;
       --primary: #1397b8;
-      --primary-dark: #0c7b97;
       --danger: #ef4444;
       --success: #22c55e;
+      --soft: #e9f5ff;
       --shadow: 0 12px 35px rgba(20, 32, 55, 0.12);
-      --radius: 22px;
+      --radius: 20px;
       --grid: rgba(47, 79, 117, 0.08);
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: linear-gradient(180deg, #f5f7fa 0%, #edf3f7 100%);
       color: var(--text);
     }
-
     .hidden { display: none !important; }
-
     .app {
       width: min(1280px, calc(100% - 28px));
       margin: 18px auto;
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(213, 221, 230, 0.9);
       border-radius: 18px;
@@ -46,7 +42,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -54,18 +49,16 @@
       gap: 16px;
       padding: 18px 22px;
       border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.95);
       position: sticky;
       top: 0;
       z-index: 10;
     }
-
     .brand {
       display: flex;
       align-items: center;
       gap: 14px;
     }
-
     .logo {
       width: 46px;
       height: 46px;
@@ -76,27 +69,23 @@
       border: 1px solid #caeaf0;
       font-size: 22px;
     }
-
     .brand h1 {
       margin: 0;
-      font-size: 1.9rem;
+      font-size: 1.85rem;
       line-height: 1.1;
     }
-
     .subtitle {
       font-size: .95rem;
       color: var(--muted);
       margin-top: 4px;
     }
-
     .toolbar, .btn-row {
       display: flex;
       gap: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
-
-    button, .btn {
+    button {
       border: none;
       border-radius: 12px;
       padding: 11px 16px;
@@ -105,18 +94,14 @@
       cursor: pointer;
       transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease;
     }
-
-    button:hover, .btn:hover { transform: translateY(-1px); }
-    button:active, .btn:active { transform: translateY(0); }
-
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
     .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 24px rgba(19,151,184,.18); }
     .btn-secondary { background: #707a8c; color: #fff; }
-    .btn-soft { background: #e9f5ff; color: #23456d; }
-    .btn-success { background: #22c55e; color: #fff; }
-    .btn-danger { background: #ef4444; color: #fff; }
-
+    .btn-soft { background: var(--soft); color: #23456d; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
     .content { padding: 20px; flex: 1; }
-
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -124,25 +109,20 @@
       box-shadow: var(--shadow);
       padding: 24px;
     }
-
     .hero {
       display: grid;
       grid-template-columns: 1.1fr .9fr;
       gap: 24px;
       align-items: stretch;
     }
-
     .hero h2 { font-size: 2rem; margin: 0 0 12px; }
     .hero p { color: var(--muted); line-height: 1.6; }
-
     .grid-2, .grid-3 {
       display: grid;
       gap: 16px;
     }
-
     .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
     .option {
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -150,24 +130,20 @@
       background: linear-gradient(180deg, #fff 0%, #f8fcfd 100%);
       cursor: pointer;
     }
-
     .option strong { font-size: 1.08rem; display: block; margin-bottom: 8px; }
     .option p { margin: 0; font-size: .95rem; }
-
     .note-card {
       padding: 16px;
       border-radius: 18px;
       border: 1px solid var(--line);
       background: #f7fbfc;
     }
-
     label {
       display: block;
       font-size: .95rem;
       font-weight: 700;
       margin-bottom: 8px;
     }
-
     input, textarea, select {
       width: 100%;
       border: 1px solid var(--line);
@@ -179,21 +155,17 @@
       outline: none;
       transition: border-color .15s ease, box-shadow .15s ease;
     }
-
     input:focus, textarea:focus, select:focus {
       border-color: #86d2e2;
       box-shadow: 0 0 0 4px rgba(19,151,184,.12);
     }
-
     textarea { min-height: 120px; resize: vertical; }
-
     .session-shell {
       display: grid;
       grid-template-columns: 390px 1fr;
       gap: 16px;
       align-items: start;
     }
-
     .sidebar {
       display: flex;
       flex-direction: column;
@@ -201,14 +173,10 @@
       position: sticky;
       top: 88px;
     }
-
     .share-box {
       text-align: center;
       background: #fdfefe;
     }
-
-    .share-box h3, .session-meta h3, .form-panel h3 { margin-top: 0; }
-
     #qrArea {
       display: flex;
       justify-content: center;
@@ -216,7 +184,6 @@
       min-height: 210px;
       margin: 12px 0 10px;
     }
-
     .code-pill {
       display: inline-block;
       padding: 12px 18px;
@@ -229,7 +196,6 @@
       background: #f3fcfe;
       margin-top: 12px;
     }
-
     .share-link {
       margin-top: 12px;
       padding: 12px;
@@ -240,34 +206,29 @@
       color: #27415b;
       word-break: break-all;
     }
-
     .session-meta .stat-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-
     .stat {
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 12px;
       background: #fbfdff;
     }
-
     .stat span { display: block; font-size: .82rem; color: var(--muted); margin-bottom: 4px; }
     .stat strong { font-size: 1rem; }
-
     .board-panel {
       min-height: 72vh;
       position: relative;
       background:
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(rgba(47,79,117,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,79,117,.08) 1px, transparent 1px),
         linear-gradient(180deg, #f7fafc 0%, #f8fbfd 100%);
       background-size: 20px 20px, 20px 20px, auto;
       overflow: hidden;
     }
-
     .board-header {
       display: flex;
       justify-content: space-between;
@@ -275,18 +236,14 @@
       align-items: start;
       margin-bottom: 18px;
     }
-
     .board-header h2 { margin: 0 0 8px; font-size: 2rem; }
     .board-header p { margin: 0; color: var(--muted); max-width: 60ch; }
-
     .board-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-
     .board-canvas {
       position: relative;
       min-height: calc(72vh - 86px);
       border-radius: 18px;
     }
-
     .sticky {
       position: absolute;
       width: 230px;
@@ -298,9 +255,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      user-select: none;
     }
-
     .sticky h4 { margin: 0; line-height: 1.25; padding-right: 26px; }
     .sticky p { margin: 0; white-space: pre-wrap; line-height: 1.45; font-size: .95rem; }
     .sticky .meta { margin-top: auto; font-size: .82rem; color: #43516a; }
@@ -309,17 +264,14 @@
       padding: 0; background: rgba(255,255,255,.7); color: #7f1d1d; border: 1px solid rgba(0,0,0,.05);
       display: none;
     }
-
     .presenter .sticky .x { display: inline-grid; place-items: center; }
     .sticky a { color: #0a4a7b; font-weight: 700; word-break: break-word; text-decoration: none; }
     .sticky img { width: 100%; max-height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(0,0,0,.06); }
-
     .yellow { background: #fff4b9; }
     .pink { background: #ffd8e8; }
     .mint { background: #daf6dc; }
     .blue { background: #dbeafe; }
     .purple { background: #eadbff; }
-
     .empty {
       display: grid;
       place-items: center;
@@ -331,10 +283,8 @@
       border-radius: 20px;
       background: rgba(255,255,255,.42);
     }
-
     .muted { color: var(--muted); }
     .small { font-size: .92rem; }
-
     .flash {
       margin-top: 14px;
       padding: 12px 14px;
@@ -343,38 +293,16 @@
       font-size: .93rem;
       font-weight: 600;
     }
-
     .flash.show { display: block; }
     .flash.error { background: #fef2f2; color: #991b1b; }
     .flash.success { background: #ecfdf5; color: #166534; }
     .flash.info { background: #eff6ff; color: #1d4ed8; }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 18, 31, 0.5);
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      z-index: 50;
-    }
-
-    .modal-card {
-      width: min(500px, 100%);
-      background: #fff;
-      border-radius: 24px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.25);
-      padding: 24px;
-      border: 1px solid var(--line);
-    }
-
     .footnote {
       text-align: center;
       color: var(--muted);
       font-size: .95rem;
       padding: 0 18px 18px;
     }
-
     .badge {
       display: inline-flex;
       align-items: center;
@@ -388,7 +316,6 @@
       font-weight: 700;
       margin-bottom: 12px;
     }
-
     @media (max-width: 1080px) {
       .session-shell, .hero { grid-template-columns: 1fr; }
       .sidebar { position: static; }
@@ -396,7 +323,6 @@
       .board-actions { justify-content: flex-start; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
-
     @media print {
       body { background: #fff; }
       .topbar, .sidebar, .footnote, .board-actions, .x { display: none !important; }
@@ -416,7 +342,7 @@
         <div class="logo">🗂️</div>
         <div>
           <h1 id="brandTitle">Mur temporal</h1>
-          <div class="subtitle">Sessió efímera, sense comptes i amb exportació opcional</div>
+          <div class="subtitle">Sessions compartides efímeres amb servidor Node.js</div>
         </div>
       </div>
       <div class="toolbar">
@@ -427,16 +353,16 @@
     <main class="content">
       <section id="homeView" class="hero">
         <div class="panel">
-          <div class="badge">Privacitat primer · sessió temporal</div>
+          <div class="badge">Privacitat primer · memòria temporal</div>
           <h2>Crea o comparteix en un mur efímer</h2>
           <p>
-            Aquesta aplicació està pensada per a dinàmiques ràpides d'aula, tallers o sessions breus.
-            No hi ha comptes ni persistència llarga. Les sessions es consideren temporals i caduquen automàticament.
+            Aquesta versió utilitza un servidor temporal en memòria per compartir el mateix mur entre dispositius.
+            No hi ha comptes ni base de dades persistent. Les sessions caduquen automàticament.
           </p>
           <div class="grid-2" style="margin-top:18px;">
             <div class="option" id="goCreate">
               <strong>1. Crear una sessió</strong>
-              <p>Configura la pregunta del mur, el color del tema, la durada i el límit de targetes per participant.</p>
+              <p>Configura la pregunta del mur, la durada i el límit de targetes per participant.</p>
             </div>
             <div class="option" id="goJoin">
               <strong>2. Unir-se a una sessió</strong>
@@ -446,18 +372,14 @@
         </div>
 
         <div class="panel">
-          <h3 style="margin-top:0;">Com funciona aquesta versió</h3>
+          <h3 style="margin-top:0;">Com funciona</h3>
           <div class="note-card">
             <strong>Presentador o docent</strong>
             <p class="muted small">Crea una sessió, comparteix el codi o QR, projecta el mural, autoorganitza les notes, exporta a CSV o PDF i tanca la sessió quan acabi.</p>
           </div>
           <div class="note-card" style="margin-top:12px;">
             <strong>Participant</strong>
-            <p class="muted small">Entra amb codi, escriu el teu nom i afegeix targetes dins del límit definit. Les aportacions es mostren al mur en temps real dins d'aquesta demo local.</p>
-          </div>
-          <div class="note-card" style="margin-top:12px;">
-            <strong>Límit important</strong>
-            <p class="muted small">Aquest fitxer és una demo HTML sense backend. La sessió temporal s'emula al navegador. Per tenir multiusuari real entre dispositius caldria afegir un servidor efímer en memòria.</p>
+            <p class="muted small">Entra amb codi, escriu el teu nom i afegeix targetes dins del límit definit. Tothom veu el mateix mur perquè la sessió es comparteix al servidor.</p>
           </div>
         </div>
       </section>
@@ -499,7 +421,6 @@
             <textarea id="descriptionInput" placeholder="Explica com s'ha de participar o quin és l'objectiu de la sessió..."></textarea>
           </div>
           <div class="btn-row" style="justify-content:center; margin-top:22px;">
-            <button class="btn-secondary" id="prepSessionBtn">Preparar sessió</button>
             <button class="btn-primary" id="startSessionBtn">Iniciar sessió</button>
           </div>
           <div id="createFlash" class="flash info"></div>
@@ -513,7 +434,7 @@
               <h2 style="margin-top:0;">Unir-se a un mur</h2>
               <div>
                 <label for="joinCodeInput">Codi del mur</label>
-                <input id="joinCodeInput" maxlength="6" placeholder="9466XV" />
+                <input id="joinCodeInput" maxlength="6" placeholder="CAQKTQ" />
               </div>
               <div style="margin-top:14px;">
                 <label for="participantNameInput">El teu nom</label>
@@ -626,29 +547,12 @@
       </section>
     </main>
 
-    <div class="footnote">Aplicació demostrativa orientada a murs efímers. Sense comptes ni persistència llarga.</div>
-  </div>
-
-  <div id="codeModal" class="modal hidden">
-    <div class="modal-card">
-      <h3 style="margin-top:0;">Validació de la sessió</h3>
-      <p class="muted">Per continuar, confirma el codi de 6 caràcters de la sessió activa.</p>
-      <div>
-        <label for="modalCodeInput">Codi</label>
-        <input id="modalCodeInput" maxlength="6" placeholder="9466XV" />
-      </div>
-      <div class="btn-row" style="margin-top:18px;">
-        <button class="btn-primary" id="confirmModalBtn">Entrar</button>
-        <button class="btn-soft" id="cancelModalBtn">Cancel·lar</button>
-      </div>
-      <div id="modalFlash" class="flash info"></div>
-    </div>
+    <div class="footnote">Aplicació demostrativa orientada a murs efímers. Les dades viuen temporalment al servidor en memòria RAM.</div>
   </div>
 
   <script>
     const API_BASE = "https://mur-idees-server.onrender.com";
-    const STORAGE_KEY = 'ephemeral-wall-sessions-v2';
-    const channel = 'BroadcastChannel' in window ? new BroadcastChannel('ephemeral-wall-channel') : null;
+
     const DEFAULT_GRID_WIDTH = 940;
     const CARD_W = 230;
     const CARD_H = 180;
@@ -657,9 +561,7 @@
     const state = {
       role: null,
       sessionCode: null,
-      participantName: '',
-      pendingJoinCode: null,
-      presenterPrepared: null,
+      participantName: ""
     };
 
     const views = {
@@ -679,11 +581,8 @@
       createFlash: document.getElementById('createFlash'),
       joinFlash: document.getElementById('joinFlash'),
       cardFlash: document.getElementById('cardFlash'),
-      modalFlash: document.getElementById('modalFlash'),
       joinCodeInput: document.getElementById('joinCodeInput'),
       participantNameInput: document.getElementById('participantNameInput'),
-      codeModal: document.getElementById('codeModal'),
-      modalCodeInput: document.getElementById('modalCodeInput'),
       sessionCodePill: document.getElementById('sessionCodePill'),
       shareUrl: document.getElementById('shareUrl'),
       baseUrlText: document.getElementById('baseUrlText'),
@@ -711,12 +610,9 @@
       homeBtn: document.getElementById('homeBtn'),
       goCreate: document.getElementById('goCreate'),
       goJoin: document.getElementById('goJoin'),
-      prepSessionBtn: document.getElementById('prepSessionBtn'),
       startSessionBtn: document.getElementById('startSessionBtn'),
       joinSessionBtn: document.getElementById('joinSessionBtn'),
       joinBackBtn: document.getElementById('joinBackBtn'),
-      confirmModalBtn: document.getElementById('confirmModalBtn'),
-      cancelModalBtn: document.getElementById('cancelModalBtn'),
       copyUrlBtn: document.getElementById('copyUrlBtn'),
       copyCodeBtn: document.getElementById('copyCodeBtn'),
       publishCardBtn: document.getElementById('publishCardBtn'),
@@ -735,7 +631,7 @@
     }
 
     function clearAllFlashes() {
-      [el.createFlash, el.joinFlash, el.cardFlash, el.modalFlash].forEach(hideFlash);
+      [el.createFlash, el.joinFlash, el.cardFlash].forEach(hideFlash);
     }
 
     function showFlash(node, message, type = 'info') {
@@ -767,47 +663,20 @@
       }
     }
 
-    function getStore() {
-      purgeExpiredSessions();
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch {
-        return {};
-      }
-    }
-
-    function saveStore(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      if (channel) channel.postMessage({ type: 'sync' });
-    }
-
-    function purgeExpiredSessions() {
-      let changed = false;
-      let store = {};
-      try { store = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { store = {}; }
-      const now = Date.now();
-      Object.keys(store).forEach(code => {
-        const s = store[code];
-        if (!s || s.status === 'stopped' || now > s.expiresAt) {
-          delete store[code];
-          changed = true;
-        }
+    async function api(path, options = {}) {
+      const res = await fetch(`${API_BASE}${path}`, {
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options
       });
-      if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-    }
 
-    function makeCode() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let out = '';
-      for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
-      return out;
-    }
+      let data = null;
+      try { data = await res.json(); } catch { data = {}; }
 
-    function uniqueCode() {
-      const store = getStore();
-      let code = makeCode();
-      while (store[code]) code = makeCode();
-      return code;
+      if (!res.ok) {
+        throw new Error(data.error || `Error ${res.status}`);
+      }
+
+      return data;
     }
 
     function sessionUrl(code) {
@@ -824,11 +693,6 @@
       });
     }
 
-    function getCurrentSession() {
-      if (!state.sessionCode) return null;
-      return getStore()[state.sessionCode] || null;
-    }
-
     function layoutForIndex(index, boardWidth = DEFAULT_GRID_WIDTH) {
       const cols = Math.max(1, Math.floor((boardWidth + GAP) / (CARD_W + GAP)));
       const col = index % cols;
@@ -836,14 +700,11 @@
       return { x: col * (CARD_W + GAP), y: row * (CARD_H + GAP) };
     }
 
-    function prepareSession() {
-      const cfg = collectSessionConfig();
-      if (!cfg.ok) return showFlash(el.createFlash, cfg.message, 'error');
-      state.presenterPrepared = cfg.data;
-      showFlash(el.createFlash, 'Sessió preparada. Pots iniciar-la ara.', 'success');
+    function countCardsByAuthor(cards, author) {
+      return cards.filter(c => (c.author || '').toLowerCase() === author.toLowerCase()).length;
     }
 
-    function collectSessionConfig() {
+    async function startSession() {
       const title = el.titleInput.value.trim();
       const owner = el.ownerInput.value.trim();
       const description = el.descriptionInput.value.trim();
@@ -851,95 +712,63 @@
       const ttlMin = Number(el.ttlInput.value);
       const themeColor = el.themeColorInput.value;
 
-      if (!title) return { ok: false, message: 'Cal indicar un títol o una pregunta per al mur.' };
-      if (!owner) return { ok: false, message: 'Cal indicar el nom del presentador.' };
-      if (!Number.isFinite(limit) || limit < 1 || limit > 20) return { ok: false, message: 'El límit de targetes per persona ha d’estar entre 1 i 20.' };
-      if (!Number.isFinite(ttlMin) || ttlMin < 10) return { ok: false, message: 'La durada de la sessió no és vàlida.' };
+      if (!title) return showFlash(el.createFlash, 'Cal indicar un títol o pregunta.', 'error');
+      if (!owner) return showFlash(el.createFlash, 'Cal indicar el nom del presentador.', 'error');
+      if (!Number.isFinite(limit) || limit < 1 || limit > 20) return showFlash(el.createFlash, 'El límit ha d’estar entre 1 i 20.', 'error');
 
-      return {
-        ok: true,
-        data: { title, owner, description, limit, ttlMin, themeColor }
-      };
+      try {
+        const data = await api('/api/sessions', {
+          method: 'POST',
+          body: JSON.stringify({ title, owner, description, limit, ttlMin, themeColor })
+        });
+
+        state.role = 'presenter';
+        state.sessionCode = data.code;
+        state.participantName = owner;
+        el.brandTitle.textContent = title;
+        await renderSession();
+        showView('session');
+      } catch (err) {
+        showFlash(el.createFlash, err.message, 'error');
+      }
     }
 
-    function startSession() {
-      const cfg = collectSessionConfig();
-      if (!cfg.ok) return showFlash(el.createFlash, cfg.message, 'error');
-      const code = uniqueCode();
-      const now = Date.now();
-      const boardWidth = Math.max(DEFAULT_GRID_WIDTH, el.boardCanvas.clientWidth || DEFAULT_GRID_WIDTH);
-      const session = {
-        code,
-        title: cfg.data.title,
-        owner: cfg.data.owner,
-        description: cfg.data.description,
-        limit: cfg.data.limit,
-        ttlMin: cfg.data.ttlMin,
-        themeColor: cfg.data.themeColor,
-        createdAt: now,
-        updatedAt: now,
-        expiresAt: now + cfg.data.ttlMin * 60 * 1000,
-        status: 'active',
-        cards: [],
-        boardWidth
-      };
-      const store = getStore();
-      store[code] = session;
-      saveStore(store);
-      state.role = 'presenter';
-      state.sessionCode = code;
-      state.participantName = cfg.data.owner;
-      el.brandTitle.textContent = cfg.data.title;
-      renderSession();
-      showView('session');
-    }
-
-    function requestJoin() {
-      purgeExpiredSessions();
+    async function joinSession() {
       const code = el.joinCodeInput.value.trim().toUpperCase();
       const name = el.participantNameInput.value.trim();
+
       if (!code) return showFlash(el.joinFlash, 'Introdueix el codi del mur.', 'error');
       if (!name) return showFlash(el.joinFlash, 'Introdueix el teu nom.', 'error');
-      const session = getStore()[code];
-      if (!session) return showFlash(el.joinFlash, 'No hi ha cap sessió activa amb aquest codi.', 'error');
-      state.pendingJoinCode = code;
-      state.participantName = name;
-      el.modalCodeInput.value = '';
-      showFlash(el.modalFlash, 'Confirma el mateix codi de la sessió per entrar.', 'info');
-      el.codeModal.classList.remove('hidden');
-    }
 
-    function confirmJoin() {
-      const code = (el.modalCodeInput.value || '').trim().toUpperCase();
-      if (!state.pendingJoinCode) return;
-      if (code !== state.pendingJoinCode) return showFlash(el.modalFlash, 'El codi no coincideix amb la sessió seleccionada.', 'error');
-      const session = getStore()[code];
-      if (!session) return showFlash(el.modalFlash, 'La sessió ja no està disponible.', 'error');
-      state.role = 'participant';
-      state.sessionCode = code;
-      el.codeModal.classList.add('hidden');
-      el.brandTitle.textContent = session.title;
-      renderSession();
-      showView('session');
+      try {
+        const session = await api(`/api/sessions/${encodeURIComponent(code)}`);
+        state.role = 'participant';
+        state.sessionCode = code;
+        state.participantName = name;
+        el.brandTitle.textContent = session.title;
+        await renderSession();
+        showView('session');
+      } catch (err) {
+        showFlash(el.joinFlash, err.message, 'error');
+      }
     }
 
     function resetHome() {
       state.role = null;
       state.sessionCode = null;
       state.participantName = '';
-      state.pendingJoinCode = null;
-      el.codeModal.classList.add('hidden');
       el.brandTitle.textContent = 'Mur temporal';
       showView('home');
     }
 
-    function renderSession() {
-      const session = getCurrentSession();
-      if (!session) {
-        resetHome();
-        alert('La sessió ja no està disponible.');
-        return;
-      }
+    async function getCurrentSession() {
+      if (!state.sessionCode) return null;
+      return api(`/api/sessions/${encodeURIComponent(state.sessionCode)}`);
+    }
+
+    async function renderSession() {
+      const session = await getCurrentSession();
+      if (!session) return;
 
       const url = sessionUrl(session.code);
       el.sessionCodePill.textContent = session.code;
@@ -956,7 +785,6 @@
       el.stopSessionBtn.classList.toggle('hidden', state.role !== 'presenter');
       el.boardPanel.classList.toggle('presenter', state.role === 'presenter');
       document.documentElement.style.setProperty('--primary', session.themeColor || '#1397b8');
-      document.documentElement.style.setProperty('--primary-dark', session.themeColor || '#0c7b97');
 
       el.qrArea.innerHTML = '';
       new QRCode(el.qrArea, { text: url, width: 180, height: 180 });
@@ -1001,13 +829,7 @@
       el.boardCanvas.querySelectorAll('.x').forEach(x => x.addEventListener('click', () => removeCard(x.dataset.id)));
     }
 
-    function countCardsByAuthor(cards, author) {
-      return cards.filter(c => c.author.toLowerCase() === author.toLowerCase()).length;
-    }
-
-    function publishCard() {
-      const session = getCurrentSession();
-      if (!session) return;
+    async function publishCard() {
       const author = el.cardAuthorInput.value.trim();
       const title = el.cardTitleInput.value.trim();
       const text = el.cardTextInput.value.trim();
@@ -1020,35 +842,23 @@
       if (link && !isHttpUrl(link)) return showFlash(el.cardFlash, 'L’enllaç no és vàlid.', 'error');
       if (image && !isHttpUrl(image)) return showFlash(el.cardFlash, 'La URL de la imatge no és vàlida.', 'error');
 
-      if (state.role === 'participant' && countCardsByAuthor(session.cards, author) >= session.limit) {
-        return showFlash(el.cardFlash, `Has arribat al límit de ${session.limit} targetes per persona.`, 'error');
-      }
+      try {
+        const session = await getCurrentSession();
+        if (state.role === 'participant' && countCardsByAuthor(session.cards, author) >= session.limit) {
+          return showFlash(el.cardFlash, `Has arribat al límit de ${session.limit} targetes per persona.`, 'error');
+        }
 
-      const store = getStore();
-      const fresh = store[session.code];
-      if (!fresh) return showFlash(el.cardFlash, 'La sessió ja no està disponible.', 'error');
-      const idx = fresh.cards.length;
-      const pos = layoutForIndex(idx, Math.max(DEFAULT_GRID_WIDTH, el.boardCanvas.clientWidth || DEFAULT_GRID_WIDTH));
-      const now = new Date();
-      fresh.cards.push({
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
-        author,
-        title,
-        text,
-        link,
-        image,
-        color,
-        x: pos.x,
-        y: pos.y,
-        order: idx,
-        createdAt: now.toISOString(),
-        createdLabel: now.toLocaleString('ca-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-      });
-      fresh.updatedAt = Date.now();
-      saveStore(store);
-      clearCardForm(false);
-      showFlash(el.cardFlash, 'Targeta publicada correctament.', 'success');
-      renderSession();
+        await api(`/api/sessions/${encodeURIComponent(state.sessionCode)}/cards`, {
+          method: 'POST',
+          body: JSON.stringify({ author, title, text, link, image, color })
+        });
+
+        clearCardForm(false);
+        showFlash(el.cardFlash, 'Targeta publicada correctament.', 'success');
+        await renderSession();
+      } catch (err) {
+        showFlash(el.cardFlash, err.message, 'error');
+      }
     }
 
     function clearCardForm(clearAuthor = false) {
@@ -1060,36 +870,38 @@
       el.cardColorInput.value = 'yellow';
     }
 
-    function removeCard(id) {
-      const session = getCurrentSession();
-      if (!session || state.role !== 'presenter') return;
-      const store = getStore();
-      const fresh = store[session.code];
-      fresh.cards = fresh.cards.filter(c => c.id !== id);
-      fresh.updatedAt = Date.now();
-      saveStore(store);
-      renderSession();
+    async function removeCard(id) {
+      try {
+        await api(`/api/sessions/${encodeURIComponent(state.sessionCode)}/cards/${encodeURIComponent(id)}`, {
+          method: 'DELETE'
+        });
+        await renderSession();
+      } catch (err) {
+        showFlash(el.cardFlash, err.message, 'error');
+      }
     }
 
-    function autoOrganize() {
-      const session = getCurrentSession();
-      if (!session) return;
-      const boardWidth = Math.max(DEFAULT_GRID_WIDTH, el.boardCanvas.clientWidth || DEFAULT_GRID_WIDTH);
-      const store = getStore();
-      const fresh = store[session.code];
-      fresh.cards = fresh.cards.map((card, i) => ({ ...card, ...layoutForIndex(i, boardWidth), order: i }));
-      fresh.updatedAt = Date.now();
-      saveStore(store);
-      renderSession();
+    async function autoOrganize() {
+      try {
+        await api(`/api/sessions/${encodeURIComponent(state.sessionCode)}/organize`, {
+          method: 'POST'
+        });
+        await renderSession();
+      } catch (err) {
+        showFlash(el.cardFlash, err.message, 'error');
+      }
     }
 
-    function exportCsv() {
-      const session = getCurrentSession();
-      if (!session) return;
-      const headers = ['id', 'author', 'title', 'text', 'link', 'image', 'color', 'createdAt'];
-      const rows = session.cards.map(card => headers.map(h => csvEscape(card[h] ?? '')).join(','));
-      const csv = [headers.join(','), ...rows].join('\n');
-      downloadBlob(csv, `${slugify(session.title || 'mur')}.csv`, 'text/csv;charset=utf-8;');
+    async function exportCsv() {
+      try {
+        const session = await getCurrentSession();
+        const headers = ['id', 'author', 'title', 'text', 'link', 'image', 'color', 'createdAt'];
+        const rows = session.cards.map(card => headers.map(h => csvEscape(card[h] ?? '')).join(','));
+        const csv = [headers.join(','), ...rows].join('\n');
+        downloadBlob(csv, `${slugify(session.title || 'mur')}.csv`, 'text/csv;charset=utf-8;');
+      } catch (err) {
+        showFlash(el.cardFlash, err.message, 'error');
+      }
     }
 
     function csvEscape(value) {
@@ -1119,15 +931,16 @@
       document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {});
     }
 
-    function stopSession() {
-      const session = getCurrentSession();
-      if (!session || state.role !== 'presenter') return;
-      const ok = confirm(`Vols aturar la sessió ${session.code}? Les targetes temporals s’eliminaran.`);
+    async function stopSession() {
+      const ok = confirm(`Vols aturar la sessió ${state.sessionCode}? Les targetes temporals s’eliminaran.`);
       if (!ok) return;
-      const store = getStore();
-      delete store[session.code];
-      saveStore(store);
-      resetHome();
+
+      try {
+        await api(`/api/sessions/${encodeURIComponent(state.sessionCode)}`, { method: 'DELETE' });
+        resetHome();
+      } catch (err) {
+        showFlash(el.cardFlash, err.message, 'error');
+      }
     }
 
     async function copyText(value, flashTarget) {
@@ -1139,22 +952,21 @@
       }
     }
 
-    function syncIfNeeded() {
+    async function pollSession() {
       if (!state.sessionCode) return;
-      const session = getCurrentSession();
-      if (!session) {
-        resetHome();
-        return;
+      try {
+        await renderSession();
+      } catch (err) {
+        if (String(err.message).toLowerCase().includes('sessió') || String(err.message).toLowerCase().includes('session')) {
+          resetHome();
+        }
       }
-      renderSession();
     }
 
     function hydrateFromUrl() {
       const params = new URLSearchParams(location.search);
       const code = (params.get('session') || '').trim().toUpperCase();
       if (!code) return;
-      const session = getStore()[code];
-      if (!session) return;
       showView('join');
       el.joinCodeInput.value = code;
       showFlash(el.joinFlash, 'Sessió detectada des de l’enllaç. Introdueix el teu nom per unir-t’hi.', 'info');
@@ -1164,11 +976,8 @@
     btn.goJoin.addEventListener('click', () => showView('join'));
     btn.homeBtn.addEventListener('click', resetHome);
     btn.joinBackBtn.addEventListener('click', resetHome);
-    btn.prepSessionBtn.addEventListener('click', prepareSession);
     btn.startSessionBtn.addEventListener('click', startSession);
-    btn.joinSessionBtn.addEventListener('click', requestJoin);
-    btn.confirmModalBtn.addEventListener('click', confirmJoin);
-    btn.cancelModalBtn.addEventListener('click', () => { el.codeModal.classList.add('hidden'); state.pendingJoinCode = null; });
+    btn.joinSessionBtn.addEventListener('click', joinSession);
     btn.copyUrlBtn.addEventListener('click', () => copyText(el.shareUrl.textContent, el.cardFlash));
     btn.copyCodeBtn.addEventListener('click', () => copyText(el.sessionCodePill.textContent, el.cardFlash));
     btn.publishCardBtn.addEventListener('click', publishCard);
@@ -1178,19 +987,10 @@
     btn.exportPdfBtn.addEventListener('click', exportPdf);
     btn.projectBtn.addEventListener('click', toggleProjectMode);
     btn.stopSessionBtn.addEventListener('click', stopSession);
-    el.modalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') confirmJoin(); });
+    window.addEventListener('resize', () => { if (state.sessionCode) renderSession().catch(() => {}); });
 
-    if (channel) channel.addEventListener('message', syncIfNeeded);
-    window.addEventListener('storage', e => { if (e.key === STORAGE_KEY) syncIfNeeded(); });
-    window.addEventListener('resize', () => { if (state.sessionCode) renderSession(); });
-    setInterval(() => {
-      purgeExpiredSessions();
-      syncIfNeeded();
-    }, 30000);
-
-    purgeExpiredSessions();
+    setInterval(pollSession, 4000);
     hydrateFromUrl();
   </script>
 </body>
 </html>
-
